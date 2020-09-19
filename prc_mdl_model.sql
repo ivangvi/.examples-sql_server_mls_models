@@ -105,11 +105,11 @@ parametros = {
     "num_leaves"      : ' + CAST(@lgb_leaves AS NVARCHAR) + ',
     "min_data_in_leaf": ' + CAST(@lgb_min_data AS NVARCHAR) + ',
     "bagging_fraction": ' + CAST(@lgb_bag_frac AS NVARCHAR) + ',
-	"bagging_freq"    : 1,
+    "bagging_freq"    : 1,
     "feature_fraction": ' + CAST(@lgb_feat_frac AS NVARCHAR)+ ',
     "learning_rate"   : ' + CAST(@lgb_rate AS NVARCHAR)+ ',
     "seed"            : 7,
-	"verbosity"       : -1,
+    "verbosity"       : -1,
 } 
 
 # cv check perfo y rounds
@@ -117,12 +117,12 @@ folds = 5
 lgb_cv = lgb.cv(
     parametros,
     lgb_train,
-	nfold = folds,
+    nfold = folds,
     early_stopping_rounds = 30,
     num_boost_round = 5000,
     categorical_feature = categoricas_names,
     eval_train_metric = True,
-	seed = 7,
+    seed = 7,
 )
 cv_df = pd.DataFrame.from_dict(lgb_cv).sort_values("valid auc-mean", ascending = False).head(1) # me quedo con la mejor ronda
 mod_cv_tr_gini = cv_df["train auc-mean"].iloc[0] * 2 - 1
@@ -178,11 +178,11 @@ INSERT INTO mdl_modelos
 EXECUTE sp_execute_external_script @language = N'Python'
     ,@script = @script
     ,@input_data_1 = @input_data_1
-	,@input_data_1_name = N'df'
+    ,@input_data_1_name = N'df'
     ,@params = N'
-			 @rows_t_sam INT
-			,@rows_f_sam INT
-			'
-	,@rows_t_sam = @rows_t_sam
-	,@rows_f_sam = @rows_f_sam
+	 @rows_t_sam INT
+	,@rows_f_sam INT
+	'
+    ,@rows_t_sam = @rows_t_sam
+    ,@rows_f_sam = @rows_f_sam
 END
